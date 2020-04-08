@@ -901,37 +901,38 @@ class Workbook(xmlwriter.XMLwriter):
         for xf_format in (self.xf_formats + self.dxf_formats):
             num_format = xf_format.num_format
 
-            # Check if num_format is an index to a built-in number format.
-            if not isinstance(num_format, str_types):
-                num_format = int(num_format)
+            if num_format:
+                # Check if num_format is an index to a built-in number format.
+                if not isinstance(num_format, str_types):
+                    num_format = int(num_format)
 
-                # Number format '0' is indexed as 1 in Excel.
-                if num_format == 0:
-                    num_format = 1
+                    # Number format '0' is indexed as 1 in Excel.
+                    if num_format == 0:
+                        num_format = 1
 
-                xf_format.num_format_index = num_format
-                continue
-            elif num_format == '0':
-                # Number format '0' is indexed as 1 in Excel.
-                xf_format.num_format_index = 1
-                continue
-            elif num_format == 'General':
-                # The 'General' format has an number format index of 0.
-                xf_format.num_format_index = 0
-                continue
+                    xf_format.num_format_index = num_format
+                    continue
+                elif num_format == '0':
+                    # Number format '0' is indexed as 1 in Excel.
+                    xf_format.num_format_index = 1
+                    continue
+                elif num_format == 'General':
+                    # The 'General' format has an number format index of 0.
+                    xf_format.num_format_index = 0
+                    continue
 
-            if num_format in num_formats:
-                # Number xf_format has already been used.
-                xf_format.num_format_index = num_formats[num_format]
-            else:
-                # Add a new number xf_format.
-                num_formats[num_format] = index
-                xf_format.num_format_index = index
-                index += 1
+                if num_format in num_formats:
+                    # Number xf_format has already been used.
+                    xf_format.num_format_index = num_formats[num_format]
+                else:
+                    # Add a new number xf_format.
+                    num_formats[num_format] = index
+                    xf_format.num_format_index = index
+                    index += 1
 
-                # Only increase font count for XF formats (not DXF formats).
-                if xf_format.xf_index:
-                    num_format_count += 1
+                    # Only increase font count for XF formats (not DXF formats).
+                    if xf_format.xf_index:
+                        num_format_count += 1
 
         self.num_format_count = num_format_count
 
